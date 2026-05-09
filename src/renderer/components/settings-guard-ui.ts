@@ -31,10 +31,12 @@ export function initSettingsGuard(): void {
       message = 'Some session tracking hooks are missing from Claude Code settings. Activity tracking may not work.';
     }
 
+    const isStatusLineOnly = hasStatusLineIssue && !hasHooksIssue;
+
     showAlertBanner({
       icon: '\u26A0',
       message,
-      cta: {
+      cta: isStatusLineOnly ? undefined : {
         label: 'Fix Settings',
         onClick: async (btn) => {
           btn.disabled = true;

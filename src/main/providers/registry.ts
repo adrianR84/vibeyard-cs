@@ -1,6 +1,7 @@
 import type { ProviderId, CliProviderMeta } from '../../shared/types';
 import type { CliProvider } from './provider';
 import { ClaudeProvider } from './claude-provider';
+import { CsProvider } from './cs-provider';
 import { CodexProvider } from './codex-provider';
 import { CopilotProvider } from './copilot-provider';
 import { GeminiProvider } from './gemini-provider';
@@ -9,6 +10,7 @@ const providers = new Map<ProviderId, CliProvider>();
 
 export function initProviders(): void {
   registerProvider(new ClaudeProvider());
+  registerProvider(new CsProvider());
   registerProvider(new CodexProvider());
   registerProvider(new CopilotProvider());
   registerProvider(new GeminiProvider());

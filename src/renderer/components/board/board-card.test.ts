@@ -278,11 +278,11 @@ describe('createCardElement provider icon', () => {
     expect(icon!.src).toBe('assets/providers/gemini.png');
   });
 
-  it('falls back to claude when no task or default provider', () => {
+  it('falls back to default provider when no task or default provider', () => {
     vi.mocked(hasMultipleAvailableProviders).mockReturnValue(true);
     const task = addTask({ title: 'T', prompt: 'p', columnId: 'col-backlog' });
     const icon = findIcon(topRow(task));
-    expect(icon!.src).toBe('assets/providers/claude.png');
+    expect(icon!.src).toBe('assets/providers/cs.png');
   });
 
   it('prefers live session providerId over task.providerId', () => {

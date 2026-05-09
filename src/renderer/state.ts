@@ -110,6 +110,7 @@ const defaultPreferences: Preferences = {
   readinessExcludedProviders: [],
   sidebarViews: { gitPanel: true, sessionHistory: true, costFooter: true, discussions: true, fileTree: true },
   boardCardMetrics: true,
+  defaultProvider: 'cs',
 };
 
 class AppState {
@@ -649,7 +650,7 @@ class AppState {
   }
 
   /** Open a CLI session by cliSessionId, bypassing Vibeyard history. Used for cross-project deep search results. */
-  openCliSession(projectId: string, cliSessionId: string, name: string, providerId: ProviderId = 'claude'): SessionRecord | undefined {
+  openCliSession(projectId: string, cliSessionId: string, name: string, providerId: ProviderId = 'cs'): SessionRecord | undefined {
     const project = this.state.projects.find((p) => p.id === projectId);
     if (!project) return undefined;
 

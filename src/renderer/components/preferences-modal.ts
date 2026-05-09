@@ -110,7 +110,7 @@ export function showPreferencesModal(): void {
       const providerLabel = document.createElement('label');
       providerLabel.textContent = 'Default coding tool';
 
-      const currentDefault = appState.preferences.defaultProvider ?? 'claude';
+      const currentDefault = appState.preferences.defaultProvider ?? 'cs';
 
       const buildProviderOptions = (providers: CliProviderMeta[]) =>
         providers.map(p => ({ value: p.id, label: p.displayName }));
@@ -675,7 +675,7 @@ export function showPreferencesModal(): void {
           description: 'Required for cost tracking and context window monitoring.',
           ok: slOk,
           statusText: slStatus,
-          onFix: slOk ? undefined : () => fixAndRerender(meta.id),
+          onFix: validation.statusLine === 'missing' ? () => fixAndRerender(meta.id) : undefined,
         });
       }
 
@@ -710,7 +710,7 @@ export function showPreferencesModal(): void {
         }
         section.appendChild(hookList);
 
-        if (capabilities.costTracking && validation.statusLine !== 'vibeyard' && !hooksOk) {
+        if (capabilities.costTracking && validation.statusLine === 'missing' && !hooksOk) {
           const fixAllRow = document.createElement('div');
           fixAllRow.className = 'setup-fix-all-row';
 

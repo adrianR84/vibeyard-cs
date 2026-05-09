@@ -7,6 +7,10 @@
   padding: 8px 0;
 }
 
+.modal-toggle-field .custom-select {
+  min-width: 200px;
+}
+
 .modal-toggle-field label {
   font-size: 13px;
   color: var(--text-primary);

@@ -77,7 +77,7 @@ describe('archiveSession via removeSession()', () => {
     expect(history[0].cliSessionId).toBe('cli-123');
     expect(history[0].createdAt).toBe(session.createdAt);
     expect(history[0].closedAt).toBeDefined();
-    expect(history[0].providerId).toBe('claude');
+    expect(history[0].providerId).toBe('cs');
   });
 
   it('archives Copilot sessions once a cliSessionId is available', () => {
@@ -480,7 +480,7 @@ describe('resumeFromHistory()', () => {
     expect(resumed).toBeDefined();
     expect(resumed.cliSessionId).toBe('cli-resume');
     expect(resumed.name).toBe('S1');
-    expect(resumed.providerId).toBe('claude');
+    expect(resumed.providerId).toBe('cs');
     expect(resumed.id).not.toBe(session.id); // new id
     expect(resumed.createdAt).toBeDefined(); // has its own createdAt
   });
@@ -657,7 +657,7 @@ describe('openCliSession()', () => {
     expect(session).toBeDefined();
     expect(session.cliSessionId).toBe('cli-abc-123');
     expect(session.name).toBe('My Session');
-    expect(session.providerId).toBe('claude');
+    expect(session.providerId).toBe('cs');
   });
 
   it('sets the new session as active', () => {

@@ -85,9 +85,10 @@ describe('getAllProviders', () => {
   it('returns all registered providers', () => {
     registerProvider(makeFakeProvider(fakeMeta));
     const all = getAllProviders();
-    expect(all.length).toBe(4);
+    expect(all.length).toBe(5);
     const ids = all.map(p => p.meta.id);
     expect(ids).toContain('claude');
+    expect(ids).toContain('cs');
     expect(ids).toContain('codex');
     expect(ids).toContain('gemini');
     expect(ids).toContain('copilot');
@@ -106,7 +107,8 @@ describe('getAllProviderMetas', () => {
   it('returns meta array for all providers', () => {
     registerProvider(makeFakeProvider(fakeMeta));
     const metas = getAllProviderMetas();
-    expect(metas.length).toBe(4);
+    expect(metas.length).toBe(5);
+    expect(metas.map(m => m.id)).toContain('cs');
     expect(metas.map(m => m.id)).toContain('codex');
     expect(metas.map(m => m.id)).toContain('gemini');
     expect(metas.map(m => m.id)).toContain('copilot');
