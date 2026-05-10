@@ -151,9 +151,11 @@ export function resolveWindowsShell(
       args: ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', shell, ...args],
     };
   }
-  // Everything else (.cmd, .bat, bare names, extensionless paths):
-  // wrap with cmd.exe so CreateProcess doesn't choke on non-PE binaries.
-  return { shell: 'cmd.exe', args: ['/c', shell, ...args] };
+  // .cmd and .bat files are directly executable on Windows — do not wrap
+  // them with cmd.exe, as that causes path-parsing issues with spaces.
+  if (ext === '.cmd' || ext === '.bat') return { shell, args };
+  // Bare names, extensionless paths, and .ps1 scripts still need wrapping.
+  return { shell: 'cmd.exe', args: ['/d', '/c', `"${shell}"`, ...args] };
 }
 
 export async function spawnPty(

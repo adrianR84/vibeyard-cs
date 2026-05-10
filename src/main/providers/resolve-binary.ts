@@ -11,6 +11,7 @@ const COMMON_BIN_DIRS = isWin
       path.join(os.homedir(), 'AppData', 'Roaming', 'npm'),
       path.join(os.homedir(), 'AppData', 'Local', 'Programs'),
       path.join(os.homedir(), 'AppData', 'Local', 'Programs', 'claude'),
+      path.join(process.env.ProgramFiles || 'C:\\Program Files', 'nodejs'),
       path.join(os.homedir(), '.local', 'bin'),
       path.join(os.homedir(), 'scoop', 'shims'),
       path.join(os.homedir(), '.volta', 'bin'),

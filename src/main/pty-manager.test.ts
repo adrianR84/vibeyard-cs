@@ -80,7 +80,7 @@ describe('spawnPty', () => {
     if (isWin) {
       expect(mockSpawn).toHaveBeenCalledWith(
         'cmd.exe',
-        ['/c', 'claude'],
+        ['/d', '/c', '"claude"'],
         expect.objectContaining({
           cwd: '/project',
           name: 'xterm-256color',
@@ -111,7 +111,7 @@ describe('spawnPty', () => {
     if (isWin) {
       expect(mockSpawn).toHaveBeenCalledWith(
         'cmd.exe',
-        ['/c', 'claude', '-r', 'claude-123'],
+        ['/d', '/c', '"claude"', '-r', 'claude-123'],
         expect.any(Object),
       );
     } else {
@@ -132,7 +132,7 @@ describe('spawnPty', () => {
     if (isWin) {
       expect(mockSpawn).toHaveBeenCalledWith(
         'cmd.exe',
-        ['/c', 'claude', '--session-id', 'claude-123'],
+        ['/d', '/c', '"claude"', '--session-id', 'claude-123'],
         expect.any(Object),
       );
     } else {
@@ -154,7 +154,7 @@ describe('spawnPty', () => {
     if (isWin) {
       expect(mockSpawn).toHaveBeenCalledWith(
         'cmd.exe',
-        ['/c', 'claude', '--verbose', '--debug'],
+        ['/d', '/c', '"claude"', '--verbose', '--debug'],
         expect.any(Object),
       );
     } else {
@@ -207,10 +207,10 @@ describe('spawnPty', () => {
     freshSpawnPty('s1', '/project', null, false, '', 'claude', undefined, undefined, vi.fn(), vi.fn());
 
     if (isWin) {
-      // On Windows, .cmd files are wrapped with cmd.exe /c
+      // On Windows, .cmd files are passed directly to pty.spawn
       expect(mockSpawn).toHaveBeenCalledWith(
-        'cmd.exe',
-        ['/c', expectedPath],
+        expectedPath,
+        [],
         expect.any(Object),
       );
     } else {
@@ -616,19 +616,19 @@ describe('getFullPath (macOS)', () => {
 
 describe('resolveWindowsShell', () => {
   if (isWin) {
-    it('wraps .cmd files with cmd.exe /c', () => {
+    it('passes .cmd files through unchanged', () => {
       const result = resolveWindowsShell('C:\\Users\\test\\npm\\claude.cmd', ['--help']);
       expect(result).toEqual({
-        shell: 'cmd.exe',
-        args: ['/c', 'C:\\Users\\test\\npm\\claude.cmd', '--help'],
+        shell: 'C:\\Users\\test\\npm\\claude.cmd',
+        args: ['--help'],
       });
     });
 
-    it('wraps .bat files with cmd.exe /c', () => {
+    it('passes .bat files through unchanged', () => {
       const result = resolveWindowsShell('C:\\tools\\run.bat', ['-v']);
       expect(result).toEqual({
-        shell: 'cmd.exe',
-        args: ['/c', 'C:\\tools\\run.bat', '-v'],
+        shell: 'C:\\tools\\run.bat',
+        args: ['-v'],
       });
     });
 
@@ -652,7 +652,7 @@ describe('resolveWindowsShell', () => {
       const result = resolveWindowsShell('claude', ['--help']);
       expect(result).toEqual({
         shell: 'cmd.exe',
-        args: ['/c', 'claude', '--help'],
+        args: ['/d', '/c', '"claude"', '--help'],
       });
     });
 
@@ -660,7 +660,7 @@ describe('resolveWindowsShell', () => {
       const result = resolveWindowsShell('C:\\tools\\claude', ['--help']);
       expect(result).toEqual({
         shell: 'cmd.exe',
-        args: ['/c', 'C:\\tools\\claude', '--help'],
+        args: ['/d', '/c', '"C:\\tools\\claude"', '--help'],
       });
     });
   } else {
