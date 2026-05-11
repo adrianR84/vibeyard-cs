@@ -1,5 +1,6 @@
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import hljs from 'highlight.js';
 import { appState } from '../state.js';
 import { closeSessionIfFileMissing } from '../session-close.js';
 import { destroySearchBar } from './search-bar.js';
@@ -27,12 +28,76 @@ function isImageFile(filePath: string): boolean {
   return /\.(png|jpe?g|gif|webp|bmp|ico|svg)$/i.test(filePath);
 }
 
+const EXT_TO_LANGUAGE: Record<string, string> = {
+  ts: 'typescript',
+  tsx: 'tsx',
+  js: 'javascript',
+  jsx: 'jsx',
+  mjs: 'javascript',
+  cjs: 'javascript',
+  json: 'json',
+  html: 'html',
+  htm: 'html',
+  css: 'css',
+  scss: 'scss',
+  less: 'less',
+  xml: 'xml',
+  yaml: 'yaml',
+  yml: 'yaml',
+  md: 'markdown',
+  sh: 'bash',
+  bash: 'bash',
+  zsh: 'bash',
+  py: 'python',
+  python: 'python',
+  go: 'go',
+  rs: 'rust',
+  java: 'java',
+  c: 'c',
+  cpp: 'cpp',
+  h: 'c',
+  hpp: 'cpp',
+  cs: 'csharp',
+  rb: 'ruby',
+  php: 'php',
+  swift: 'swift',
+  kt: 'kotlin',
+  kts: 'kotlin',
+  sql: 'sql',
+  toml: 'toml',
+  ini: 'ini',
+  cfg: 'ini',
+  conf: 'ini',
+  log: 'plaintext',
+  txt: 'plaintext',
+};
+
+function detectLanguage(filePath: string): string | null {
+  const ext = filePath.split('.').pop()?.toLowerCase();
+  if (!ext) return null;
+  return EXT_TO_LANGUAGE[ext] ?? null;
+}
+
 const instances = new Map<string, FileReaderInstance>();
 let unwatchFileChanged: (() => void) | null = null;
 
-function renderFileContent(content: string): HTMLElement {
+function highlightLine(line: string, language: string | null, hljsSupported: boolean): string {
+  if (!language || !hljsSupported) {
+    return escapeHtml(line) || '&nbsp;';
+  }
+  try {
+    const result = hljs.highlight(line, { language, ignoreIllegals: true });
+    return result.value || escapeHtml(line) || '&nbsp;';
+  } catch {
+    return escapeHtml(line) || '&nbsp;';
+  }
+}
+
+function renderFileContent(content: string, filePath?: string): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'file-reader-content';
+  const language = filePath ? detectLanguage(filePath) : null;
+  const hljsSupported = language ? !!hljs.getLanguage(language) : false;
 
   const lines = content.split('\n');
   for (let i = 0; i < lines.length; i++) {
@@ -45,7 +110,7 @@ function renderFileContent(content: string): HTMLElement {
 
     const lineText = document.createElement('span');
     lineText.className = 'file-reader-line-text';
-    lineText.innerHTML = escapeHtml(lines[i]) || '&nbsp;';
+    lineText.innerHTML = highlightLine(lines[i], language, hljsSupported);
 
     row.appendChild(lineNum);
     row.appendChild(lineText);
@@ -90,7 +155,7 @@ function renderBody(instance: FileReaderInstance): void {
   if (instance.viewMode === 'rendered') {
     body.appendChild(renderMarkdownContent(instance.rawContent!));
   } else {
-    body.appendChild(renderFileContent(instance.rawContent!));
+    body.appendChild(renderFileContent(instance.rawContent!, instance.filePath));
   }
 }
 

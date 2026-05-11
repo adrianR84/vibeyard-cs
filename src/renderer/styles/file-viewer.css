@@ -558,6 +558,60 @@
   vertical-align: middle;
 }
 
+/* Highlight.js syntax highlighting - matches file-reader dark theme */
+.hljs {
+  color: var(--text-secondary);
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name,
+.hljs-tag {
+  color: #c678dd;
+}
+.hljs-string,
+.hljs-attr,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+  color: #98c379;
+}
+.hljs-title,
+.hljs-section,
+.hljs-attribute {
+  color: #e5c07b;
+}
+.hljs-variable,
+.hljs-template-variable,
+.hljs-class {
+  color: #e06c75;
+}
+.hljs-number,
+.hljs-literal,
+.hljs-type {
+  color: #d19a66;
+}
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+  color: #5c6370;
+  font-style: italic;
+}
+.hljs-params,
+.hljs-property,
+.hljs-function {
+  color: #61afef;
+}
+.hljs-operator,
+.hljs-punctuation {
+  color: var(--text-muted);
+}
+.hljs-regexp,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #e06c75;
+}
 /* Ask-AI bubble shown near a text selection inside file panes */
 .file-prompt-bubble {
   position: absolute;
