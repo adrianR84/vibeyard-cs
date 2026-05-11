@@ -80,6 +80,7 @@ export function showPreferencesModal(): void {
   let debugModeCheckbox: HTMLInputElement | null = null;
   let sidebarCheckboxes: { gitPanel: HTMLInputElement; sessionHistory: HTMLInputElement; costFooter: HTMLInputElement; discussions: HTMLInputElement; fileTree: HTMLInputElement } | null = null;
   let boardCardMetricsCheckbox: HTMLInputElement | null = null;
+  let syntaxHighlightingCheckbox: HTMLInputElement | null = null;
   let activeRecorder: { cleanup: () => void } | null = null;
   const originalTheme = appState.preferences.theme ?? 'dark';
 
@@ -247,6 +248,22 @@ export function showPreferencesModal(): void {
       copyOnSelectRow.appendChild(copyOnSelectLabel);
       copyOnSelectRow.appendChild(copyOnSelectCheckbox);
       content.appendChild(copyOnSelectRow);
+
+      const syntaxHighlightRow = document.createElement('div');
+      syntaxHighlightRow.className = 'modal-toggle-field';
+
+      const syntaxHighlightLabel = document.createElement('label');
+      syntaxHighlightLabel.htmlFor = 'pref-syntax-highlighting';
+      syntaxHighlightLabel.textContent = 'Syntax highlighting in file reader';
+
+      syntaxHighlightingCheckbox = document.createElement('input');
+      syntaxHighlightingCheckbox.type = 'checkbox';
+      syntaxHighlightingCheckbox.id = 'pref-syntax-highlighting';
+      syntaxHighlightingCheckbox.checked = appState.preferences.syntaxHighlighting ?? true;
+
+      syntaxHighlightRow.appendChild(syntaxHighlightLabel);
+      syntaxHighlightRow.appendChild(syntaxHighlightingCheckbox);
+      content.appendChild(syntaxHighlightRow);
 
     } else if (section === 'appearance') {
       const themeRow = document.createElement('div');
@@ -804,6 +821,9 @@ export function showPreferencesModal(): void {
     }
     if (boardCardMetricsCheckbox && boardCardMetricsCheckbox.checked !== (appState.preferences.boardCardMetrics ?? true)) {
       appState.setPreference('boardCardMetrics', boardCardMetricsCheckbox.checked);
+    }
+    if (syntaxHighlightingCheckbox) {
+      appState.setPreference('syntaxHighlighting', syntaxHighlightingCheckbox.checked);
     }
   };
 

@@ -327,6 +327,7 @@ export interface Preferences {
     fileTree: boolean;
   };
   boardCardMetrics?: boolean;
+  syntaxHighlighting?: boolean;
 }
 
 // --- Settings Validation ---

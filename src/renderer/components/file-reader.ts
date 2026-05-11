@@ -106,9 +106,10 @@ function highlightHtmlLine(line: string): string {
 function renderFileContent(content: string, filePath?: string): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'file-reader-content';
-  const language = filePath ? detectLanguage(filePath) : null;
+  const syntaxHighlighting = appState.preferences.syntaxHighlighting ?? true;
+  const language = syntaxHighlighting ? detectLanguage(filePath) : null;
   const hljsSupported = language ? !!hljs.getLanguage(language) : false;
-  const isHtml = language === 'html';
+  const isHtml = syntaxHighlighting && language === 'html';
 
   const lines = content.split('\n');
   for (let i = 0; i < lines.length; i++) {
