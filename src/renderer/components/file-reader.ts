@@ -93,11 +93,22 @@ function highlightLine(line: string, language: string | null, hljsSupported: boo
   }
 }
 
+function highlightHtmlLine(line: string): string {
+  // For HTML, use highlightAuto to detect embedded CSS/JS within the line
+  try {
+    const result = hljs.highlightAuto(line);
+    return result.value || escapeHtml(line) || '&nbsp;';
+  } catch {
+    return escapeHtml(line) || '&nbsp;';
+  }
+}
+
 function renderFileContent(content: string, filePath?: string): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'file-reader-content';
   const language = filePath ? detectLanguage(filePath) : null;
   const hljsSupported = language ? !!hljs.getLanguage(language) : false;
+  const isHtml = language === 'html';
 
   const lines = content.split('\n');
   for (let i = 0; i < lines.length; i++) {
@@ -110,7 +121,9 @@ function renderFileContent(content: string, filePath?: string): HTMLElement {
 
     const lineText = document.createElement('span');
     lineText.className = 'file-reader-line-text';
-    lineText.innerHTML = highlightLine(lines[i], language, hljsSupported);
+    lineText.innerHTML = isHtml
+      ? highlightHtmlLine(lines[i])
+      : highlightLine(lines[i], language, hljsSupported);
 
     row.appendChild(lineNum);
     row.appendChild(lineText);
